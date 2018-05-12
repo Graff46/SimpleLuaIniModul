@@ -1,6 +1,5 @@
 # SimpleLuaIniModul
  [English](#en)
- 
 Simple module for parsing files in ini format into a lua table and write files in the ini format from a table in lua.
 ***
 The parsing of the file: call the function parse(file, comm), pfile - the file name (string), comm - record comments to a table (true\false).
@@ -30,4 +29,30 @@ key1 = value1
 key2 = value2; comment2
 value3
 value4; comment3
+```
+***
+example code
+parsing:
+```
+local a = parsing("C:\\MyTest.ini", true)
+print(a.section.key)
+```
+write:
+```
+local t = {
+    section1 = {
+        key = val,
+        key2 = {val2, [";"] = "comment"}
+    },
+    section2 = {
+        [';'] = "comment for section2",
+        key = val,
+        val2, 
+        {val3, [";"] = "new comment"}
+    }
+}
+-- write ini in file
+local a, b = write(t, "C:\\NewIniFile.ini")
+-- a - string in format ini
+-- b - handle of the created file
 ```
