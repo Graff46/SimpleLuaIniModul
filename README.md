@@ -1,7 +1,7 @@
 # SimpleLuaIniModul
  [English](#en)
  
-    Simple module for parsing files in ini format into a lua table and write files in the ini format from a table in lua.
+Simple module for parsing files in ini format into a lua table and write files in the ini format from a table in lua.
 ***
 The parsing of the file: call the function parse(file, comm), pfile - the file name (string), comm - record comments to a table (true\false).
 Function returns table with data from ini file.
