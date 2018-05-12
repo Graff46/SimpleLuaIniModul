@@ -1,4 +1,4 @@
-# SimpleLuaIniModul
+# SimpleLuaINIModul
  [English](#en)
  
 Simple module for parsing files in ini format into a lua table and write files in the ini format from a table in lua.
