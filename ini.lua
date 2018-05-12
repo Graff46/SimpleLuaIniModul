@@ -14,23 +14,26 @@ function parse (pfile, NCOMM)
       if fcomm and fcomm==";" then break end
       tbl[sec] = {}
       if NCOMM and pcomm and string.len(pcomm) > 0 then
-        tbl[sec].comment = pcomm
+        tbl[sec][';'] = pcomm
       end
     elseif string.find(line, ".+[=].-") then
-      fcomm, key, val = string.match(line, "([;]?)%s*(%S+)%s*=%s*(.+)")
+      fcomm, key, val = string.match(line, "([;]?)%s*(.+)%s*=%s*(.+)")
       if fcomm and fcomm==";" then break end
-      val, pcomm = string.match(val, "([^;]+)[;]?(.*)")
+      key = string.match(key, "%S+")
+      val, pcomm = string.match(val, "([^;]+)[;]?(.*)") 
       if not tbl[sec][key] then tbl[sec][key] = {} end
-      if NCOMM then
-        table.insert(tbl[sec][tostring(key)], {val, [';'] = pcomm})
+      if NCOMM and pcomm and string.len(pcomm) > 0 then
+        tbl[sec][tostring(key)] = {val, [';'] = pcomm} 
       else
-        table.insert(tbl[sec][tostring(key)], val) 
+        tbl[sec][tostring(key)] = val
       end
-    elseif string.find(line, "%S") then
-      val = string.match(val, "(;)(%S+)")
-      val, pcomm = string.match(val, "([^;]+)[;]?(.*)")
-      if fcomm and fcomm==";" then break end
-      if NCOMM then
+      pcomm = false 
+    elseif string.find(line, "%S") then 
+      fcomm, val = string.match(line, "(;?)(.+)") 
+      if (not val) or (fcomm and fcomm==";") then break end
+      val, pcomm = string.match(val, "([^;]+)[;]?(.*)") 
+      val = string.match(val, "%S+") 
+      if NCOMM and pcomm and string.len(pcomm) > 0 then
         table.insert(tbl[sec], {val, [';'] = pcomm})
       else
         table.insert(tbl[sec], val)
@@ -72,4 +75,7 @@ local str = ""
   end
 end
 
-write({['section'] = {[';']='comm', key="val", key2='val2', "v4", {"v5", [';'] = 'comt'}}}, "C:\\test2.ini")
+local a = parse("C:\\test.ini", true)
+for k,v in pairs(a.sec2) do
+  print (k, v)
+end
