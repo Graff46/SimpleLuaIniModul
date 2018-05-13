@@ -74,8 +74,3 @@ local str = ""
     return str
   end
 end
-
-local a = parse("C:\\test.ini", true)
-for k,v in pairs(a.sec2) do
-  print (k, v)
-end
