@@ -71,5 +71,3 @@ local str = ""
     return str
   end
 end
-
-write({['section'] = {[';']='comm', key="val", key2='val2', "v4", {"v5", [';'] = 'comt'}}}, "C:\\test2.ini")
