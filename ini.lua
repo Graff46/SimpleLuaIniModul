@@ -18,22 +18,25 @@ function parse (pfile, NCOMM)
       end
     elseif string.find(line, ".+[=].-") then
       fcomm, key, val = string.match(line, "([;]?)%s*(%S+)%s*=%s*(.+)")
-      if fcomm and fcomm==";" then break end
-      val, pcomm = string.match(val, "([^;]+)[;]?(.*)")
-      if not tbl[sec][key] then tbl[sec][key] = {} end
-      if NCOMM then
-        table.insert(tbl[sec][tostring(key)], {val, [';'] = pcomm})
-      else
-        table.insert(tbl[sec][tostring(key)], val) 
+      if not fcomm or  fcomm ~=";" then
+        if not tbl[sec][key] then tbl[sec][key] = {} end
+        if NCOMM then
+          val, pcomm = string.match(val, "([^;]+)[;]?(.*)")
+          table.insert(tbl[sec][tostring(key)], {val, [';'] = pcomm})
+        else
+          tbl[sec][tostring(key)] = val
+        end
       end
-    elseif string.find(line, "%S") then
+    elseif string.find(line, "%S") and NCOMM and val then
       val = string.match(val, "(;)(%S+)")
-      val, pcomm = string.match(val, "([^;]+)[;]?(.*)")
-      if fcomm and fcomm==";" then break end
-      if NCOMM then
-        table.insert(tbl[sec], {val, [';'] = pcomm})
-      else
-        table.insert(tbl[sec], val)
+      if val then 
+        val, pcomm = string.match(val, "([^;]+)[;]?(.*)")
+        if fcomm and fcomm==";" then break end
+        if NCOMM then
+          table.insert(tbl[sec], {val, [';'] = pcomm})
+        else
+          table.insert(tbl[sec], val)
+        end
       end
     end
   end
@@ -71,3 +74,5 @@ local str = ""
     return str
   end
 end
+
+return {parse=parse, write=write}
