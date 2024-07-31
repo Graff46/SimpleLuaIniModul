@@ -8,6 +8,7 @@ function parse (pfile, NCOMM)
   else 
     pattSec = "([;]?)[[]([^;]+)[]]"
   end
+  
   for line in io.lines(pfile) do
     if string.find(line, "[[].+[]]") then
       fcomm, sec, pcomm = string.match(line, pattSec)
@@ -17,7 +18,7 @@ function parse (pfile, NCOMM)
         tbl[sec].comment = pcomm
       end
     elseif string.find(line, ".+[=].-") then
-      fcomm, key, val = string.match(line, "([;]?)%s*(%S+)%s*=%s*(.+)")
+      fcomm, key, val = string.match(line, "([;]?)%s*(%S+)%s*=%s*(.*)")
       if not fcomm or  fcomm ~=";" then
         if not tbl[sec][key] then tbl[sec][key] = {} end
         if NCOMM then
@@ -59,11 +60,12 @@ local str = ""
         if type(key) == "number" and key ~= ";" then
           str = string.format("%s\n%s", str, val)  
         elseif type(key) == "string" and key ~= ";" then 
-          str = string.format("%s\n%s = %s; %s", str, key, val, val[';'] or "") 
+          str = string.format("%s\n%s = %s", str, key, val) 
         end
       end
     end 
   end
+  
   if pfile then
     local file = io.open(pfile, mode or "a")
     file:write(str)
